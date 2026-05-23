@@ -74,17 +74,26 @@ uvx --from hermes-agent python x_search_cli.py \
 
 This repository also includes an Agent Skills format `SKILL.md`.
 
-- Skill file: [`x-search/SKILL.md`](x-search/SKILL.md)
-- Skill name: `x-search`
+- Skill file: [`x-search-skill/SKILL.md`](x-search-skill/SKILL.md)
+- Reference file: [`x-search-skill/references/COMMANDS.md`](x-search-skill/references/COMMANDS.md)
+- Skill name: `x-search-skill`
 - Intended use:
   - Summarize reactions on X
   - Collect X posts with citation URLs
   - Filter X search by handle, date, image, and video
+- Operational rules for agents:
+  - Treat X as the primary source and add non-X sources only when supplemental context is needed
+  - Validate timeframe, topic, and evidence level before answering
+  - Distinguish installation, argument, authentication, and empty, too broad, or weak-evidence results
 
 This skill assumes that the `x-search` command is already installed
 and serves as an operational guide for agents that call the local `x-search` CLI.
 
-To use it as a skill, place `x-search/SKILL.md` in your Agent Skills directory
+`x-search-skill/SKILL.md` is the primary instruction file. `x-search-skill/references/COMMANDS.md`
+is optional command guidance that agents read only when needed. Keep the linked
+`references/` directory alongside the skill file.
+
+To use it as a skill, place `x-search-skill/SKILL.md` in your Agent Skills directory
 or load this repository in an environment where the file can be referenced.
 
 ## Usage
@@ -123,13 +132,15 @@ x-search --mode citations 'What are people saying about xAI on X?'
 
 Filter by handle or date:
 
+Replace `YYYY-MM-DD` with explicit dates before running the command.
+
 ```sh
 x-search \
   --model grok-4.3 \
   --allowed-handle xai \
   --allowed-handle grok \
-  --from-date 2026-05-01 \
-  --to-date 2026-05-20 \
+  --from-date YYYY-MM-DD \
+  --to-date YYYY-MM-DD \
   'Summarize recent reactions on X'
 ```
 

@@ -75,17 +75,26 @@ uvx --from hermes-agent python x_search_cli.py \
 
 このリポジトリには Agent Skills 形式の `SKILL.md` も同梱しています。
 
-- スキルファイル: [`x-search/SKILL.md`](x-search/SKILL.md)
-- スキル名: `x-search`
+- スキルファイル: [`x-search-skill/SKILL.md`](x-search-skill/SKILL.md)
+- 参照ファイル: [`x-search-skill/references/COMMANDS.md`](x-search-skill/references/COMMANDS.md)
+- スキル名: `x-search-skill`
 - 想定用途:
   - X 上の反応を要約したい
   - 引用 URL 付きで X 投稿を集めたい
   - ハンドル、日付、画像、動画で X 検索を絞りたい
+- Agent向け運用ルール:
+  - X を主ソースとして扱い、補足が必要なときだけ非 X ソースを足す
+  - 回答前に期間、話題、証拠の十分さが依頼と一致しているか確認する
+  - 未導入、引数不正、認証不備、結果が空・広すぎる・根拠が弱い場合を分けて扱う
 
 このスキルは `x-search` コマンドがインストール済みであることを前提に、
 Agent がローカルの `x-search` CLI を呼び出すための運用ガイドです。
 
-スキルとして使う場合は、`x-search/SKILL.md` を Agent Skills のスキルディレクトリに配置するか、
+`x-search-skill/SKILL.md` が本体の指示ファイルで、`x-search-skill/references/COMMANDS.md` は
+必要なときだけ読む補助的なコマンド集です。スキルを配置するときは、
+リンク先の `references/` ディレクトリも一緒に保持してください。
+
+スキルとして使う場合は、`x-search-skill/SKILL.md` を Agent Skills のスキルディレクトリに配置するか、
 このリポジトリを参照できる状態で読み込んでください。
 
 ## 使い方
@@ -124,13 +133,15 @@ x-search --mode citations 'What are people saying about xAI on X?'
 
 ハンドルや日付で絞る:
 
+`YYYY-MM-DD` は実際の日付に置き換えてから実行してください。
+
 ```sh
 x-search \
   --model grok-4.3 \
   --allowed-handle xai \
   --allowed-handle grok \
-  --from-date 2026-05-01 \
-  --to-date 2026-05-20 \
+  --from-date YYYY-MM-DD \
+  --to-date YYYY-MM-DD \
   'Summarize recent reactions on X'
 ```
 
